@@ -10,6 +10,14 @@ public class DeviceSimulator {
     private static final String SERVER_IP = "localhost";
     private static final int SERVER_PORT = 9000;
 
+    private static final String[] DEVICE_IDS = {
+            "D001",
+            "D002",
+            "D003",
+            "D004",
+            "D005"
+    };
+
     public static void main(String[] args) throws Exception {
 
         Random random = new Random();
@@ -24,23 +32,26 @@ public class DeviceSimulator {
 
             while (true) {
 
-                // 장비에서 주기적으로 수집되는 상태 데이터
-                String message = String.format(
-                        "{\"deviceId\":\"D001\",\"temperature\":%.1f,\"humidity\":%.1f,\"timestamp\":%d}",
-                        20 + random.nextDouble() * 10,
-                        40 + random.nextDouble() * 20,
-                        System.currentTimeMillis()
-                );
+                for (String deviceId : DEVICE_IDS) {
 
-                // TCP 서버로 데이터 전송
-                outputStream.write(
-                        message.getBytes(StandardCharsets.UTF_8)
-                );
-                outputStream.flush();
+                    // 장비별 더미 상태 데이터 생성
+                    String message = String.format(
+                            "{\"deviceId\":\"%s\",\"temperature\":%.1f,\"humidity\":%.1f,\"timestamp\":%d}",
+                            deviceId,
+                            20 + random.nextDouble() * 10,
+                            40 + random.nextDouble() * 20,
+                            System.currentTimeMillis()
+                    );
 
-                System.out.println("전송 메시지 : " + message);
+                    outputStream.write(
+                            message.getBytes(StandardCharsets.UTF_8)
+                    );
+                    outputStream.flush();
 
-                Thread.sleep(3000);
+                    System.out.println("전송 메시지 : " + message);
+
+                    Thread.sleep(1000);
+                }
             }
         }
     }
