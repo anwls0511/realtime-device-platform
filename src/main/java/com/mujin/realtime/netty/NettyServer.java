@@ -7,9 +7,13 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LineBasedFrameDecoder;
+import io.netty.handler.codec.string.StringDecoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
 
 @Component
 @RequiredArgsConstructor
@@ -54,6 +58,16 @@ public class NettyServer {
 
                                     // 수신 데이터 처리 Handler 등록
                                     ch.pipeline()
+                                            .addLast(
+                                                    new LineBasedFrameDecoder(
+                                                            1024
+                                                    )
+                                            )
+                                            .addLast(
+                                                    new StringDecoder(
+                                                            StandardCharsets.UTF_8
+                                                    )
+                                            )
                                             .addLast(
                                                     deviceMessageHandler
                                             );

@@ -21,10 +21,8 @@ public class DeviceMessageHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
-        ByteBuf byteBuf = (ByteBuf) msg;
-
-        // TCP 데이터 문자열 변환
-        String message = byteBuf.toString(StandardCharsets.UTF_8);
+        String message =
+                (String) msg;
 
         System.out.println("수신 메시지 : " + message);
 

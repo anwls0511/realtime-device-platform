@@ -44,7 +44,7 @@ public class DeviceSimulator {
                     );
 
                     outputStream.write(
-                            message.getBytes(StandardCharsets.UTF_8)
+                            (message + "\n").getBytes(StandardCharsets.UTF_8)
                     );
                     outputStream.flush();
 
