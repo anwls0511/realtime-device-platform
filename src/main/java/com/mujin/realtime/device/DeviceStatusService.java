@@ -59,5 +59,17 @@ public class DeviceStatusService {
         }
     }
 
+    // 상태값 기준 장비 상태 조회
+    public List<DeviceStatus> findByStatus(String status) {
+
+        List<DeviceStatus> deviceStatuses = findAll();
+
+        return deviceStatuses.stream()
+                .filter(deviceStatus ->
+                        status.equalsIgnoreCase(deviceStatus.getStatus())
+                )
+                .toList();
+    }
+
 
 }
