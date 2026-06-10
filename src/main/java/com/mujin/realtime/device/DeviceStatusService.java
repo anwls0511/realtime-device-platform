@@ -5,6 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 public class DeviceStatusService {
@@ -27,5 +31,26 @@ public class DeviceStatusService {
     // 장비 상태 조회
     public String findByDeviceId(String deviceId) {
         return redisTemplate.opsForValue().get("device:status:" + deviceId);
+    }
+
+    // 전체 장비 상태 조회
+    public List<String> findAll() {
+        Set<String> keys = redisTemplate.keys("device:status:*");
+
+        if (keys == null || keys.isEmpty()) {
+            return List.of();
+        }
+
+        List<String> deviceStatuses = new ArrayList<>();
+
+        for (String key : keys) {
+            String value = redisTemplate.opsForValue().get(key);
+
+            if (value != null) {
+                deviceStatuses.add(value);
+            }
+        }
+
+        return deviceStatuses;
     }
 }
