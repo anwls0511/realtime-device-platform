@@ -3,6 +3,7 @@ package com.mujin.realtime.netty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mujin.realtime.device.DeviceStatus;
 import com.mujin.realtime.device.DeviceStatusService;
+import com.mujin.realtime.websocket.DeviceStatusWebSocketHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -17,6 +18,7 @@ public class DeviceMessageHandler extends ChannelInboundHandlerAdapter {
 
     private final DeviceStatusService deviceStatusService;
     private final ObjectMapper objectMapper;
+    private final DeviceStatusWebSocketHandler webSocketHandler;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -30,6 +32,8 @@ public class DeviceMessageHandler extends ChannelInboundHandlerAdapter {
 
         // Redis 저장
         deviceStatusService.save(status);
+
+        webSocketHandler.broadcast(message);
 
         // 장비 응답
         ctx.writeAndFlush(ctx.alloc().buffer().writeBytes("OK\n".getBytes(StandardCharsets.UTF_8)));
