@@ -34,17 +34,30 @@ public class DeviceSimulator {
 
                 for (String deviceId : DEVICE_IDS) {
 
-                    // 장비별 더미 상태 데이터 생성
+                    double temperature =
+                            20 + random.nextDouble() * 10;
+
+                    double humidity =
+                            40 + random.nextDouble() * 20;
+
+                    String status =
+                            temperature >= 28
+                                    ? "WARNING"
+                                    : "NORMAL";
+
+                    // TCP 메시지 구분을 위해 마지막에 개행 문자 추가
                     String message = String.format(
-                            "{\"deviceId\":\"%s\",\"temperature\":%.1f,\"humidity\":%.1f,\"timestamp\":%d}",
+                            "{\"deviceId\":\"%s\",\"temperature\":%.1f,\"humidity\":%.1f,\"status\":\"%s\",\"timestamp\":%d}",
                             deviceId,
-                            20 + random.nextDouble() * 10,
-                            40 + random.nextDouble() * 20,
+                            temperature,
+                            humidity,
+                            status,
                             System.currentTimeMillis()
                     );
 
                     outputStream.write(
-                            (message + "\n").getBytes(StandardCharsets.UTF_8)
+                            (message + "\n")
+                                    .getBytes(StandardCharsets.UTF_8)
                     );
                     outputStream.flush();
 

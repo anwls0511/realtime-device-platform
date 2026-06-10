@@ -19,4 +19,7 @@ public class DeviceStatus {
 
     // 데이터 수집 시간
     private long timestamp;
+
+    // 장비 상태
+    private String status;
 }
