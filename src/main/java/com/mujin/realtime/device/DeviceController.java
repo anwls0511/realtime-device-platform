@@ -23,7 +23,7 @@ public class DeviceController {
 
     // 전체 장비 상태 조회
     @GetMapping("/status")
-    public List<String> getDeviceStatuses() {
+    public List<DeviceStatus> getDeviceStatuses() {
         return deviceStatusService.findAll();
     }
 }

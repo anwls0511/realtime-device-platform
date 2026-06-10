@@ -34,23 +34,30 @@ public class DeviceStatusService {
     }
 
     // 전체 장비 상태 조회
-    public List<String> findAll() {
-        Set<String> keys = redisTemplate.keys("device:status:*");
+    public List<DeviceStatus> findAll() {
+        try {
+            Set<String> keys = redisTemplate.keys("device:status:*");
 
-        if (keys == null || keys.isEmpty()) {
-            return List.of();
-        }
-
-        List<String> deviceStatuses = new ArrayList<>();
-
-        for (String key : keys) {
-            String value = redisTemplate.opsForValue().get(key);
-
-            if (value != null) {
-                deviceStatuses.add(value);
+            if (keys == null || keys.isEmpty()) {
+                return List.of();
             }
-        }
 
-        return deviceStatuses;
+            List<DeviceStatus> deviceStatuses = new ArrayList<>();
+
+            for (String key : keys) {
+                String value = redisTemplate.opsForValue().get(key);
+
+                if (value != null) {
+                    DeviceStatus status = objectMapper.readValue(value, DeviceStatus.class);
+                    deviceStatuses.add(status);
+                }
+            }
+
+            return deviceStatuses;
+        } catch (Exception e) {
+            throw new RuntimeException("전체 장비 상태 조회 실패", e);
+        }
     }
+
+
 }
