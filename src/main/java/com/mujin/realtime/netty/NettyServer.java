@@ -1,5 +1,6 @@
 package com.mujin.realtime.netty;
 
+import com.mujin.realtime.netty.decoder.DeviceStatusDecoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -21,6 +22,8 @@ public class NettyServer {
 
     // 장비 메시지 처리 핸들러
     private final DeviceMessageHandler deviceMessageHandler;
+
+    private final DeviceStatusDecoder deviceStatusDecoder;
 
     // TCP 수신 포트
     @Value("${netty.port}")
@@ -68,6 +71,11 @@ public class NettyServer {
                                                             StandardCharsets.UTF_8
                                                     )
                                             )
+                                            .addLast(
+                                                    deviceStatusDecoder
+                                            )
+
+                                            // 변환된 장비 상태 데이터 처리
                                             .addLast(
                                                     deviceMessageHandler
                                             );

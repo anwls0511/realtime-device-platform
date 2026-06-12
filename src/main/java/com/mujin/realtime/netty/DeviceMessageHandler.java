@@ -23,17 +23,15 @@ public class DeviceMessageHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
-        String message = (String) msg;
+        // DeviceStatusDecoder에서 변환된 장비 상태 객체
+        DeviceStatus status = (DeviceStatus) msg;
 
-        System.out.println("수신 메시지 : " + message);
 
-        // JSON -> 객체 변환
-        DeviceStatus status = objectMapper.readValue(message, DeviceStatus.class);
-
-        // Redis 저장
+        // 최신 장비 상태 저장(redis)
         deviceStatusService.save(status);
 
-        webSocketHandler.broadcast(message);
+        // WebSocket 클라이언트에 최신 장비 상태 전송
+        webSocketHandler.broadcast(status);
 
         // 장비 응답
         ctx.writeAndFlush(ctx.alloc().buffer().writeBytes("OK\n".getBytes(StandardCharsets.UTF_8)));
